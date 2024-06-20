@@ -3,11 +3,16 @@ using DAL.Entities;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 
-namespace DAL.EF
+namespace DAL.Contexts
 {
     public class EShopContext:DbContext
     {
         private readonly IConfiguration _configuration;
+
+        public EShopContext()
+        {
+
+        }
 
         public EShopContext(DbContextOptions<EShopContext> options, IConfiguration configuration) : base(options)
         {
@@ -27,8 +32,10 @@ namespace DAL.EF
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+            {               
+                var connectionString = _configuration.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseSqlServer(connectionString);
+
             }
             base.OnConfiguring(optionsBuilder);
         }
