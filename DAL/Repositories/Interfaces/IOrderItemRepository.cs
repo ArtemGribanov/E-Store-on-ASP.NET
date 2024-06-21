@@ -1,6 +1,8 @@
-﻿namespace DAL.Repositories.Interfaces;
+﻿using DAL.Entities;
 
-public interface IOrderItemRepository
+namespace DAL.Repositories.Interfaces;
+
+public interface IOrderItemRepository : IRepository<OrderItem>
 {
 	Task<int> GetProductCountByIdAsync(int productId);
 }
