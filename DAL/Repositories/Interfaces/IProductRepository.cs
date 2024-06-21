@@ -1,8 +1,7 @@
 ﻿using DAL.Entities;
 
 namespace DAL.Repositories.Interfaces;
-public interface IProductRepository
+public interface IProductRepository : IRepository<Product>
 {
-	Task<string> GetDescriptionByIdAsync(int id);
-	Task<IEnumerable<Product>> GetProductsByCategoryAsync(Category category);
+	
 }
