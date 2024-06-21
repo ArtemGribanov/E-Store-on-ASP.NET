@@ -1,6 +1,6 @@
-﻿namespace BLL.DTO;
+﻿namespace BLL.DTO.Response;
 
-public class UserDTO
+public class UserResponseDTO
 {
 	public int Id { get; set; }
 	public string Name { get; set; }
@@ -8,4 +8,5 @@ public class UserDTO
 	public string Email { get; set; }
 	public string Password { get; set; }
 	public string Sex { get; set; }
+	public ICollection<OrderResponseDTO> Orders { get; set; }
 }

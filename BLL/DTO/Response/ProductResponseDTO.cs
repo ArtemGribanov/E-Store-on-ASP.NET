@@ -1,6 +1,6 @@
-﻿namespace BLL.DTO;
+﻿namespace BLL.DTO.Response;
 
-public class ProductDTO
+public class ProductResponseDTO
 {
 	public int Id { get; set; }
 	public int Count { get; set; }
@@ -8,4 +8,6 @@ public class ProductDTO
 	public string Description { get; set; }
 	public decimal Price { get; set; }
 	public int CategoryId { get; set; }
+	public CategoryResponseDTO Category { get; set; }
+	public ICollection<OrderItemResponseDTO> OrderItems { get; set; }
 }
