@@ -1,6 +1,6 @@
 ﻿namespace BLL.Exceptions.AlreadyExist;
 
-public class CategoryAlreadyExistException : Exception
+public class CategoryAlreadyExistException : AlreadyExistException
 {
 	CategoryAlreadyExistException() : base("This category already exists")
 	{ }

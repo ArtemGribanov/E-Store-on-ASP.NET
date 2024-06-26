@@ -1,6 +1,6 @@
 ﻿namespace BLL.Exceptions.AlreadyExist;
 
-public class UserAlreadyExistException : Exception
+public class UserAlreadyExistException : AlreadyExistException
 {
 	public UserAlreadyExistException() : base("User with this email alerady exists") 
 	{ }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Exceptions.AlreadyExist;
 
-public class ProductAlreadyExistsException : Exception
+public class ProductAlreadyExistsException : AlreadyExistException
 {
 	public ProductAlreadyExistsException() : base("This product already exists")
 	{ }
