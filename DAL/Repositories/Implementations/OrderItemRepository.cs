@@ -2,6 +2,7 @@
 using DAL.Entities;
 using DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DAL.Repositories.Implementations
 {
@@ -14,9 +15,9 @@ namespace DAL.Repositories.Implementations
             _context = context;
         }
 
-        public void CreateAsync(OrderItem entity)
+        public void CreateAsync(OrderItem orderItem)
         {
-            _context.OrdersItem.Add(entity);
+            _context.OrdersItem.Add(orderItem);
         }
 
         public void DeleteAsync(int id)
@@ -24,35 +25,35 @@ namespace DAL.Repositories.Implementations
             _context.OrdersItem.Remove(new OrderItem { OrderId = id });
         }
 
-        public async Task<IEnumerable<OrderItem>> FindAsync(Func<OrderItem, bool> predicate)
+        public async Task<IEnumerable<OrderItem>> FindAsync(Expression<Func<OrderItem, bool>> predicate)
         {
-            return await Task.Run(() => _context.OrdersItem.Where(predicate).ToList());
+            return await _context.OrdersItem.Where(predicate).ToListAsync();
         }
 
         public async Task<IEnumerable<OrderItem>> GetAllAsync()
         {
-            var OrdersItems = await _context.OrdersItem
+            var ordersItems = await _context.OrdersItem.AsNoTracking()
                 .ToListAsync();
 
-            return OrdersItems;
+            return ordersItems;
         }
 
         public async Task<OrderItem> GetByIdAsync(int id)
         {
-            var OrderItem = await _context.OrdersItem
+            var orderItem = await _context.OrdersItem.AsNoTracking()
                 .FirstOrDefaultAsync(OrderItem => OrderItem.OrderId == id);
 
-            return OrderItem;
+            return orderItem;
         }
 
-        public async Task SaveChangesAsync(OrderItem entity)
+        public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
 
-        public void UpdateAsync(OrderItem entity)
+        public void UpdateAsync(OrderItem orderItem)
         {
-            _context.OrdersItem.Update(entity);
+            _context.OrdersItem.Update(orderItem);
         }
     }
 }

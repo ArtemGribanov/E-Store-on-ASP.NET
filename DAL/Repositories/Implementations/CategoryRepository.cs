@@ -2,6 +2,8 @@
 using DAL.Entities;
 using DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+
 
 namespace DAL.Repositories.Implementations
 {
@@ -14,9 +16,9 @@ namespace DAL.Repositories.Implementations
             _context = context;
         }
 
-        public void CreateAsync(Category entity)
+        public void CreateAsync(Category category)
         {
-            _context.Category.Add(entity);
+            _context.Category.Add(category);
         }
 
         public void DeleteAsync(int id)
@@ -24,35 +26,35 @@ namespace DAL.Repositories.Implementations
             _context.Category.Remove(new Category { Id = id });
         }
 
-        public async Task<IEnumerable<Category>> FindAsync(Func<Category, bool> predicate)
+        public async Task<IEnumerable<Category>> FindAsync(Expression<Func<Category, bool>> predicate)
         {
-            return await Task.Run(() => _context.Category.Where(predicate).ToList());
+            return await _context.Category.Where(predicate).ToListAsync();
         }
 
         public async Task<IEnumerable<Category>> GetAllAsync()
         {
-            var Categorys = await _context.Category
+            var categorys = await _context.Category.AsNoTracking()
                 .ToListAsync();
 
-            return Categorys;
+            return categorys;
         }
 
         public async Task<Category> GetByIdAsync(int id)
         {
-            var Category = await _context.Category
+            var category = await _context.Category.AsNoTracking()
                 .FirstOrDefaultAsync(Category => Category.Id == id);
 
-            return Category;
+            return category;
         }
 
-        public async Task SaveChangesAsync(Category entity)
+        public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
 
-        public void UpdateAsync(Category entity)
+        public void UpdateAsync(Category category)
         {
-            _context.Category.Update(entity);
+            _context.Category.Update(category);
         }
     }
 }

@@ -2,6 +2,7 @@
 using DAL.Entities;
 using DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DAL.Repositories.Implementations
 {
@@ -14,9 +15,9 @@ namespace DAL.Repositories.Implementations
             _context = context;
         }
 
-        public void CreateAsync(User entity)
+        public void CreateAsync(User user)
         {
-            _context.User.Add(entity);
+            _context.User.Add(user);
         }
 
         public void DeleteAsync(int id)
@@ -24,14 +25,14 @@ namespace DAL.Repositories.Implementations
             _context.User.Remove(new User { Id = id });
         }
 
-        public async Task<IEnumerable<User>> FindAsync(Func<User, bool> predicate)
+        public async Task<IEnumerable<User>> FindAsync(Expression<Func<User, bool>> predicate)
         {
-            return await Task.Run(() => _context.User.Where(predicate).ToList());
+            return await _context.User.Where(predicate).ToListAsync();
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            var users = await _context.User
+            var users = await _context.User.AsNoTracking()
                 .ToListAsync();
 
             return users;
@@ -39,20 +40,20 @@ namespace DAL.Repositories.Implementations
 
         public async Task<User> GetByIdAsync(int id)
         {
-            var user = await _context.User
+            var user = await _context.User.AsNoTracking()
                 .FirstOrDefaultAsync(user => user.Id == id);
                 
             return user;
         }
 
-        public async Task SaveChangesAsync(User entity)
+        public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
 
-        public void UpdateAsync(User entity)
+        public void UpdateAsync(User user)
         {
-            _context.User.Update(entity);
+            _context.User.Update(user);
         }
     }
 }

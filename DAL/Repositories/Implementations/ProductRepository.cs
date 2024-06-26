@@ -2,6 +2,7 @@
 using DAL.Entities;
 using DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DAL.Repositories.Implementations
 {
@@ -14,9 +15,9 @@ namespace DAL.Repositories.Implementations
             _context = context;
         }
 
-        public void CreateAsync(Product entity)
+        public void CreateAsync(Product product)
         {
-            _context.Product.Add(entity);
+            _context.Product.Add(product);
         }
 
         public void DeleteAsync(int id)
@@ -24,35 +25,35 @@ namespace DAL.Repositories.Implementations
             _context.Product.Remove(new Product { Id = id });
         }
 
-        public async Task<IEnumerable<Product>> FindAsync(Func<Product, bool> predicate)
+        public async Task<IEnumerable<Product>> FindAsync(Expression<Func<Product, bool>> predicate)
         {
-            return await Task.Run(() => _context.Product.Where(predicate).ToList());
+            return await _context.Product.Where(predicate).ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            var Products = await _context.Product
+            var products = await _context.Product.AsNoTracking()
                 .ToListAsync();
 
-            return Products;
+            return products;
         }
 
         public async Task<Product> GetByIdAsync(int id)
         {
-            var Product = await _context.Product
+            var product = await _context.Product.AsNoTracking()
                 .FirstOrDefaultAsync(Product => Product.Id == id);
 
-            return Product;
+            return product;
         }
 
-        public async Task SaveChangesAsync(Product entity)
+        public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
 
-        public void UpdateAsync(Product entity)
+        public void UpdateAsync(Product product)
         {
-            _context.Product.Update(entity);
+            _context.Product.Update(product);
         }
     }
 }
