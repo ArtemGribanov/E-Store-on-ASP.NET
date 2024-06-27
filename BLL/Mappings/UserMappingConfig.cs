@@ -8,7 +8,7 @@ public class UserMappingConfig : IRegister
 {
 	public void Register(TypeAdapterConfig config)
 	{
-		throw new NotImplementedException();
+		//throw new NotImplementedException();
 		config.NewConfig<User, UserResponseDTO>()
 			.Map(dest => dest.Orders, src => src.Orders);
 	}
