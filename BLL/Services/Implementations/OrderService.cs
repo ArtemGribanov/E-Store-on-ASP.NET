@@ -32,7 +32,7 @@ public class OrderService : IOrderService
 			//exception validation error
 		}
 
-		var user = _userRepository.GetByIdAsync(order.UserId);
+		var user = await _userRepository.GetByIdAsync(order.UserId);
 
 		if (user == null)
 		{
@@ -49,9 +49,9 @@ public class OrderService : IOrderService
 		return response;
 	}
 
-	public Task DeleteAsync(int id)
+	public async Task DeleteAsync(int id)
 	{
-		var order = _orderRepository.GetByIdAsync(id);
+		var order = await _orderRepository.GetByIdAsync(id);
 
 		if (order == null)
 		{
@@ -62,7 +62,7 @@ public class OrderService : IOrderService
 
 		//await _orderRepository.SaveChangesAsync();
 
-		throw new NotImplementedException();//
+		//throw new NotImplementedException();//
 	}
 
 	public async Task<IEnumerable<OrderResponseDTO>> GetAllAsync()
@@ -106,7 +106,7 @@ public class OrderService : IOrderService
 
 	public async Task UpdateAsync(int id, OrderRequestDTO order)
 	{
-		var validationResult = _validator.Validate(order);
+		var validationResult = await _validator.ValidateAsync(order);
 
 		if (validationResult.IsValid)
 		{

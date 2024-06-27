@@ -1,28 +1,88 @@
 ﻿using BLL.DTO.Request;
 using BLL.DTO.Response;
 using BLL.Services.Interfaces;
+using DAL.Entities;
+using DAL.Repositories.Interfaces;
+using FluentValidation;
+using Mapster;
 
 namespace BLL.Services.Implementations;
 
 public class UserService : IUserService
 {
-	public Task<UserResponseDTO> CreateAsync(UserRequestDTO user)
+	private readonly IUserRepository _userRepository;
+	private readonly IValidator<UserRequestDTO> _validator;
+	public UserService(IUserRepository userRepository, IValidator<UserRequestDTO> validator)
 	{
-		throw new NotImplementedException();
+		_userRepository = userRepository;
+		_validator = validator;
 	}
 
-	public Task DeleteAsync(int id)
+	public async Task<UserResponseDTO> CreateAsync(UserRequestDTO user)
 	{
-		throw new NotImplementedException();
+		var validationResult = await _validator.ValidateAsync(user);
+
+		if (!validationResult.IsValid)
+		{
+			// exception
+		}
+
+		var userExist = await _userRepository.FindAsync(usr => usr.Email == user.Email);
+
+		if (userExist.Any())
+		{
+			// exception
+		}
+
+		var mappedUser = user.Adapt<User>();
+		_userRepository.CreateAsync(mappedUser);
+
+		var response = mappedUser.Adapt<UserResponseDTO>();
+		return response;
 	}
 
-	public Task<UserResponseDTO> GetByIdAsync(int id)
+	public async Task DeleteAsync(int id)
 	{
-		throw new NotImplementedException();
+		var user = await _userRepository.GetByIdAsync(id);
+
+		if (user == null)
+		{
+			// exception
+		}
+
+		_userRepository.DeleteAsync(id);
 	}
 
-	public Task UpdateAsync(int id, UserRequestDTO user)
+	public async Task<UserResponseDTO> GetByIdAsync(int id)
 	{
-		throw new NotImplementedException();
+		var user = await _userRepository.GetByIdAsync(id);
+
+		if (user == null)
+		{
+			// exception
+		}
+
+		return user.Adapt<UserResponseDTO>();
+	}
+
+	public async Task UpdateAsync(int id, UserRequestDTO user)
+	{
+		var validationResult = await _validator.ValidateAsync(user);
+
+		if (!validationResult.IsValid)
+		{
+			//exception
+		}
+
+		var userExist = await _userRepository.GetByIdAsync(id);
+		
+		if ( userExist == null)
+		{
+			// exception
+		}
+
+		user.Adapt(userExist);
+
+		_userRepository.UpdateAsync(userExist);
 	}
 }
