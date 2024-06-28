@@ -11,10 +11,18 @@ namespace BLL.Services.Implementations;
 public class OrderItemService : IOrderItemService
 {
 	private readonly IOrderItemRepository _orderItemRepository;
+	private readonly IOrderRepository _orderRepository;
+	private readonly IProductRepository _productRepository;
 	private readonly IValidator<OrderItemRequestDTO> _validator;
-	public OrderItemService(IOrderItemRepository orderItemRepository, IValidator<OrderItemRequestDTO> validator)
+	public OrderItemService(
+		IOrderItemRepository orderItemRepository,
+		IOrderRepository orderRepository,
+		IProductRepository productRepository,
+		IValidator<OrderItemRequestDTO> validator)
 	{
 		_orderItemRepository = orderItemRepository;
+		_orderRepository = orderRepository;
+		_productRepository = productRepository;
 		_validator = validator;
 	}
 	public async Task<OrderItemResponseDTO> CreateAsync(OrderItemRequestDTO orderItem)
@@ -42,21 +50,35 @@ public class OrderItemService : IOrderItemService
 		return response;
 	}
 
-	public async Task DeleteAsync(int id)
+	public async Task DeleteAsync(int orderId, int productId)
 	{
-		var orderItem = await _orderItemRepository.GetByIdAsync(id);
+		var orderItem = await _orderItemRepository.GetByIdAsync(orderId, productId);
 
 		if (orderItem == null)
 		{
 			// exception
 		}
 
-		_orderItemRepository.DeleteAsync(id);
+		_orderItemRepository.DeleteAsync(orderId, productId);
 	}
 
-	public async Task<OrderItemResponseDTO> GetByIdAsync(int id)
+	public async Task<OrderItemResponseDTO> GetByIdAsync(int orderId, int productId)
 	{
-		var orderItem = await _orderItemRepository.GetByIdAsync(id);
+		var order = await _orderRepository.GetByIdAsync(orderId);
+
+		if ( order == null )
+		{
+			// exception
+		}
+
+		var product = await _productRepository.GetByIdAsync(productId);
+
+		if ( product == null )
+		{
+			// exception
+		}
+
+		var orderItem = await _orderItemRepository.GetByIdAsync(orderId, productId);
 		
 		if (orderItem == null)
 		{
@@ -66,9 +88,23 @@ public class OrderItemService : IOrderItemService
 		return orderItem.Adapt<OrderItemResponseDTO>();
 	}
 
-	public async Task<int> GetProductCountById(int id)
+	public async Task<int> GetProductCountById(int orderId, int productId)
 	{
-		var orderItem = await _orderItemRepository.GetByIdAsync(id);
+		var order = await _orderRepository.GetByIdAsync(orderId);
+
+		if (order == null)
+		{
+			// exception
+		}
+
+		var product = await _productRepository.GetByIdAsync(productId);
+
+		if (product == null)
+		{
+			// exception
+		}
+
+		var orderItem = await _orderItemRepository.GetByIdAsync(orderId, productId);
 
 		if (orderItem == null)
 		{
@@ -78,22 +114,7 @@ public class OrderItemService : IOrderItemService
 		return orderItem.Count;
 	}
 
-	public Task<string> GetProductNameById(int id)
-	{
-		//var orderItem = await _orderItemRepository.GetByIdAsync(id);
-
-		//if (orderItem == null)
-		//{
-		//	// exception
-		//}
-
-		//var product = await _orderItemRepository.GetAllAsync().Result.Where(item => item.ProductId == id);
-
-		//return orderItem.;
-		throw new NotImplementedException();
-	}
-
-	public async Task UpdateAsync(int id, OrderItemRequestDTO orderItem)
+	public async Task UpdateAsync(int orderId, int productId, OrderItemRequestDTO orderItem)
 	{
 		var validationResult = await _validator.ValidateAsync(orderItem);
 
@@ -102,7 +123,7 @@ public class OrderItemService : IOrderItemService
 			// exception
 		}
 
-		var orderItemExist = await _orderItemRepository.GetByIdAsync
+		var orderItemExist = await _orderItemRepository.GetByIdAsync(orderId, productId);
 
 		throw new NotImplementedException();
 	}
