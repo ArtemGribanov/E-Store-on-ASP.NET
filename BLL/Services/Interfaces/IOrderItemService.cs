@@ -6,9 +6,8 @@ namespace BLL.Services.Interfaces;
 public interface IOrderItemService
 {
 	Task<OrderItemResponseDTO> CreateAsync(OrderItemRequestDTO orderItem);
-	Task UpdateAsync(int id, OrderItemRequestDTO orderItem);
-	Task DeleteAsync(int id);
-	Task<OrderItemResponseDTO> GetByIdAsync(int id);
-	Task<int> GetProductCountById(int id);
-	Task<string> GetProductNameById(int id);
+	Task UpdateAsync(int orderId, int productId,  OrderItemRequestDTO orderItem);
+	Task DeleteAsync(int orderId, int productId);
+	Task<OrderItemResponseDTO> GetByIdAsync(int orderId, int productId);
+	Task<int> GetProductCountById(int orderId, int productId);
 }
