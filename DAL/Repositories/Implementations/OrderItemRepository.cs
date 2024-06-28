@@ -18,16 +18,19 @@ namespace DAL.Repositories.Implementations
         public void CreateAsync(OrderItem orderItem)
         {
             _context.OrdersItem.Add(orderItem);
+            _context.SaveChangesAsync();
         }
 
-        public void DeleteAsync(int id)
+        public void DeleteAsync(OrderItem orderItem)
         {
-            _context.OrdersItem.Remove(new OrderItem { OrderId = id });
+            _context.OrdersItem.Remove(orderItem);
+            _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<OrderItem>> FindAsync(Expression<Func<OrderItem, bool>> predicate)
         {
-            return await _context.OrdersItem.Where(predicate).ToListAsync();
+            return await _context.OrdersItem.Where(predicate).AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<OrderItem>> GetAllAsync()
@@ -46,14 +49,10 @@ namespace DAL.Repositories.Implementations
             return orderItem;
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
-
         public void UpdateAsync(OrderItem orderItem)
         {
             _context.OrdersItem.Update(orderItem);
+            _context.SaveChangesAsync();
         }
     }
 }

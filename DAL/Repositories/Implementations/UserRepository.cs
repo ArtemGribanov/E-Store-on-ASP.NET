@@ -18,16 +18,19 @@ namespace DAL.Repositories.Implementations
         public void CreateAsync(User user)
         {
             _context.User.Add(user);
+            _context.SaveChangesAsync();
         }
 
-        public void DeleteAsync(int id)
+        public void DeleteAsync(User user)
         {
-            _context.User.Remove(new User { Id = id });
+            _context.User.Remove(user);
+            _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<User>> FindAsync(Expression<Func<User, bool>> predicate)
         {
-            return await _context.User.Where(predicate).ToListAsync();
+            return await _context.User.Where(predicate).AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
@@ -46,14 +49,10 @@ namespace DAL.Repositories.Implementations
             return user;
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
-
         public void UpdateAsync(User user)
         {
             _context.User.Update(user);
+            _context.SaveChangesAsync();
         }
     }
 }

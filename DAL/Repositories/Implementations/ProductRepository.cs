@@ -18,16 +18,19 @@ namespace DAL.Repositories.Implementations
         public void CreateAsync(Product product)
         {
             _context.Product.Add(product);
+            _context.SaveChangesAsync();
         }
 
-        public void DeleteAsync(int id)
+        public void DeleteAsync(Product product)
         {
-            _context.Product.Remove(new Product { Id = id });
+            _context.Product.Remove(product);
+            _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Product>> FindAsync(Expression<Func<Product, bool>> predicate)
         {
-            return await _context.Product.Where(predicate).ToListAsync();
+            return await _context.Product.Where(predicate).AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync()
@@ -46,14 +49,10 @@ namespace DAL.Repositories.Implementations
             return product;
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
-
         public void UpdateAsync(Product product)
         {
             _context.Product.Update(product);
+            _context.SaveChangesAsync();
         }
     }
 }

@@ -19,16 +19,19 @@ namespace DAL.Repositories.Implementations
         public void CreateAsync(Category category)
         {
             _context.Category.Add(category);
+            _context.SaveChangesAsync();
         }
 
-        public void DeleteAsync(int id)
+        public void DeleteAsync(Category category)
         {
-            _context.Category.Remove(new Category { Id = id });
+            _context.Category.Remove(category);
+            _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Category>> FindAsync(Expression<Func<Category, bool>> predicate)
         {
-            return await _context.Category.Where(predicate).ToListAsync();
+            return await _context.Category.Where(predicate).AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Category>> GetAllAsync()
@@ -47,14 +50,10 @@ namespace DAL.Repositories.Implementations
             return category;
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
-
         public void UpdateAsync(Category category)
         {
             _context.Category.Update(category);
+            _context.SaveChangesAsync();
         }
     }
 }
