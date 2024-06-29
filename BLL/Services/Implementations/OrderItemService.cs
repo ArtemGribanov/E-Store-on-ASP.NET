@@ -59,7 +59,7 @@ public class OrderItemService : IOrderItemService
 			// exception
 		}
 
-		_orderItemRepository.DeleteAsync(orderId, productId);
+		_orderItemRepository.DeleteAsync(orderItem);
 	}
 
 	public async Task<OrderItemResponseDTO> GetByIdAsync(int orderId, int productId)

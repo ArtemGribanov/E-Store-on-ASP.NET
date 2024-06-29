@@ -1,4 +1,6 @@
-﻿namespace DAL.Repositories.Interfaces
+﻿using System.Linq.Expressions;
+
+namespace DAL.Repositories.Interfaces
 {
     public interface IRepository<T>
     {
