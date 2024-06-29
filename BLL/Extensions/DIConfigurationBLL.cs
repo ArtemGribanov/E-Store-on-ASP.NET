@@ -6,7 +6,7 @@ using BLL.Validators;
 
 namespace BLL.Extensions;
 
-public static class BLLDIConfiguration
+public static class DIConfigurationBLL
 {
 	public static IServiceCollection ConfigureBLLServices(this IServiceCollection services)
 	{

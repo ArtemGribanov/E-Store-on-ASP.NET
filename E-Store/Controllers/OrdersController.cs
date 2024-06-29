@@ -46,6 +46,7 @@ public class OrdersController : ControllerBase
 	public async Task<IActionResult> GetByIdAsync(int id)
 	{
 		var order = await _orderService.GetByIdAsync(id);
+
 		return Ok(order);
 	}
 

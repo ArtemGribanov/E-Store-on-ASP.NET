@@ -50,7 +50,7 @@ public class UserService : IUserService
 			// exception
 		}
 
-		_userRepository.DeleteAsync(id);
+		//_userRepository.DeleteAsync(user);
 	}
 
 	public async Task<UserResponseDTO> GetByIdAsync(int id)

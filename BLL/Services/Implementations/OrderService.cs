@@ -43,8 +43,6 @@ public class OrderService : IOrderService
 
 		_orderRepository.CreateAsync(mappedOrder);
 
-		//await _orderRepository.SaveChangesAsync(mappedOrder);
-
 		var response = mappedOrder.Adapt<OrderResponseDTO>();
 		return response;
 	}
@@ -58,11 +56,7 @@ public class OrderService : IOrderService
 			//exception order doesnt exist
 		}
 
-		_orderRepository.DeleteAsync(id);
-
-		//await _orderRepository.SaveChangesAsync();
-
-		//throw new NotImplementedException();//
+		//_orderRepository.DeleteAsync(order);
 	}
 
 	public async Task<IEnumerable<OrderResponseDTO>> GetAllAsync()
