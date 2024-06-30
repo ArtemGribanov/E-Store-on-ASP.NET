@@ -62,6 +62,7 @@ public class OrderService : IOrderService
 	public async Task<IEnumerable<OrderResponseDTO>> GetAllAsync()
 	{
 		var orders = await _orderRepository.GetAllAsync();
+
 		var mappedOrders = orders.Adapt<IEnumerable<OrderResponseDTO>>();
 
 		return mappedOrders;
@@ -117,8 +118,5 @@ public class OrderService : IOrderService
 		order.Adapt(orderExist);
 
 		_orderRepository.UpdateAsync(orderExist);
-
-		//_orderRepository.SaveChangesAsync();
-		//throw new NotImplementedException();
 	}
 }

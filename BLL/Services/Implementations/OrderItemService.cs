@@ -88,6 +88,15 @@ public class OrderItemService : IOrderItemService
 		return orderItem.Adapt<OrderItemResponseDTO>();
 	}
 
+	public async Task<IEnumerable<OrderItemResponseDTO>> GetAllAsync()
+	{
+		var orderItems = await _orderItemRepository.GetAllAsync();
+
+		var mappedOrderItems = orderItems.Adapt<IEnumerable<OrderItemResponseDTO>>();
+
+		return mappedOrderItems;
+	}
+
 	public async Task<int> GetProductCountById(int orderId, int productId)
 	{
 		var order = await _orderRepository.GetByIdAsync(orderId);
@@ -125,6 +134,6 @@ public class OrderItemService : IOrderItemService
 
 		var orderItemExist = await _orderItemRepository.GetByIdAsync(orderId, productId);
 
-		throw new NotImplementedException();
+		_orderItemRepository.UpdateAsync(orderItemExist);
 	}
 }
