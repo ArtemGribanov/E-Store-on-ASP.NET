@@ -1,13 +1,14 @@
 ﻿using BLL.DTO.Request;
 using BLL.DTO.Response;
 using BLL.Services.Interfaces;
+using BLL.Exceptions;
 using DAL.Entities;
 using DAL.Repositories.Interfaces;
 using FluentValidation;
 using Mapster;
 
 namespace BLL.Services.Implementations;
-
+ 
 public class OrderItemService : IOrderItemService
 {
 	private readonly IOrderItemRepository _orderItemRepository;
@@ -30,7 +31,7 @@ public class OrderItemService : IOrderItemService
 		var validationResult = await _validator.ValidateAsync(orderItem);
 		if (!validationResult.IsValid)
 		{
-			// exception
+			throw new Exceptions.ValidationException("Validation error");
 		}
 
 		var orderItemExist = await _orderItemRepository.FindAsync(item => 
@@ -39,7 +40,7 @@ public class OrderItemService : IOrderItemService
 
 		if (orderItemExist.Any())
 		{
-			// exception
+			throw new AlreadyExistException("This OrderItem already exists");
 		}
 
 		var mappedOrderItem = orderItem.Adapt<OrderItem>();
@@ -56,7 +57,7 @@ public class OrderItemService : IOrderItemService
 
 		if (orderItem == null)
 		{
-			// exception
+			throw new NotFoundException($"OrderItem with orderId {orderId} and productId {productId} not found");
 		}
 
 		_orderItemRepository.DeleteAsync(orderItem);
@@ -68,21 +69,21 @@ public class OrderItemService : IOrderItemService
 
 		if ( order == null )
 		{
-			// exception
+			throw new NotFoundException($"Order with id {orderId} not found");
 		}
 
 		var product = await _productRepository.GetByIdAsync(productId);
 
 		if ( product == null )
 		{
-			// exception
+			throw new NotFoundException($"Product with id {productId} not found");
 		}
 
 		var orderItem = await _orderItemRepository.GetByIdAsync(orderId, productId);
 		
 		if (orderItem == null)
 		{
-			// exception
+			throw new NotFoundException($"OrderItem with orderId {orderId} and productId {productId} not found");
 		}
 
 		return orderItem.Adapt<OrderItemResponseDTO>();
@@ -103,21 +104,21 @@ public class OrderItemService : IOrderItemService
 
 		if (order == null)
 		{
-			// exception
+			throw new NotFoundException($"Order with id {orderId} not found");
 		}
 
 		var product = await _productRepository.GetByIdAsync(productId);
 
 		if (product == null)
 		{
-			// exception
+			throw new NotFoundException($"Product with id {productId} not found");
 		}
 
 		var orderItem = await _orderItemRepository.GetByIdAsync(orderId, productId);
 
 		if (orderItem == null)
 		{
-			// exception
+			throw new NotFoundException($"OrderItem with orderId {orderId} and productId {productId} not found");
 		}
 
 		return orderItem.Count;
@@ -129,7 +130,7 @@ public class OrderItemService : IOrderItemService
 
 		if (!validationResult.IsValid)
 		{
-			// exception
+			throw new Exceptions.ValidationException("Validation error");
 		}
 
 		var orderItemExist = await _orderItemRepository.GetByIdAsync(orderId, productId);

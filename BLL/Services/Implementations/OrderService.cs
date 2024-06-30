@@ -30,7 +30,7 @@ public class OrderService : IOrderService
 
 		if (!validationResult.IsValid) 
 		{
-			throw new Exceptions.ValidationException("Incorrect input");
+			throw new Exceptions.ValidationException("Validation error");
 		}
 
 		var user = await _userRepository.GetByIdAsync(order.UserId);
@@ -106,7 +106,7 @@ public class OrderService : IOrderService
 
 		if (validationResult.IsValid)
 		{
-			throw new Exceptions.ValidationException("Incorrect input");
+			throw new Exceptions.ValidationException("Validation error");
 		}
 
 		var orderExist = await _orderRepository.GetByIdAsync(id);
