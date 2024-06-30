@@ -1,6 +1,7 @@
 ﻿using BLL.DTO.Request;
 using BLL.DTO.Response;
 using BLL.Services.Interfaces;
+using BLL.Exceptions;
 using DAL.Entities;
 using DAL.Repositories.Interfaces;
 using FluentValidation;
@@ -29,14 +30,14 @@ public class OrderService : IOrderService
 
 		if (!validationResult.IsValid) 
 		{
-			//exception validation error
+			throw new Exceptions.ValidationException("Incorrect input");
 		}
 
 		var user = await _userRepository.GetByIdAsync(order.UserId);
 
 		if (user == null)
 		{
-			//exception user doesnt exist
+			throw new NotFoundException($"User with id {order.UserId} not found");
 		}
 
 		var mappedOrder = order.Adapt<Order>();
@@ -53,10 +54,10 @@ public class OrderService : IOrderService
 
 		if (order == null)
 		{
-			//exception order doesnt exist
+			throw new NotFoundException($"Order with id {id} not found");
 		}
 
-		//_orderRepository.DeleteAsync(order);
+		_orderRepository.DeleteAsync(order);
 	}
 
 	public async Task<IEnumerable<OrderResponseDTO>> GetAllAsync()
@@ -74,7 +75,7 @@ public class OrderService : IOrderService
 
 		if (order == null)
 		{
-			//exception order doesnt exist
+			throw new NotFoundException($"Order with id {id} not found");
 		}
 
 		return order.Adapt<OrderResponseDTO>();
@@ -86,7 +87,7 @@ public class OrderService : IOrderService
 
 		if(user == null)
 		{
-			//exception user doesnt exist
+			throw new NotFoundException($"User with id {id} not found");
 		}
 
 		var orders = await _orderRepository
@@ -105,14 +106,14 @@ public class OrderService : IOrderService
 
 		if (validationResult.IsValid)
 		{
-			// exception validation error
+			throw new Exceptions.ValidationException("Incorrect input");
 		}
 
 		var orderExist = await _orderRepository.GetByIdAsync(id);
 
 		if (orderExist == null)
 		{
-			// exception order doesnt exist
+			throw new NotFoundException($"Order with id {id} not found");
 		}
 
 		order.Adapt(orderExist);

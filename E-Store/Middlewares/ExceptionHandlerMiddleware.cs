@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using BLL.Exceptions;
+using System.Net;
 using System.Text.Json;
 
 namespace E_Store.Middlewares;
@@ -44,11 +45,15 @@ public class ExceptionHandlerMiddleware
 		if (statusCode == HttpStatusCode.InternalServerError)
 			_logger.LogError(ex, message);
 
-		await context.Response.WriteAsJsonAsync(exceptionResult);
+		await context.Response.WriteAsync(exceptionResult);
 	}
 
 	private static HttpStatusCode GetStatusCode(Exception exception) => exception switch
 	{
+		AlreadyExistException => HttpStatusCode.Conflict,
+		BadHttpRequestException => HttpStatusCode.BadRequest,
+		NotFoundException => HttpStatusCode.NotFound,
+		ValidationException => HttpStatusCode.BadRequest,
 		_ => HttpStatusCode.InternalServerError,
 	};
 }

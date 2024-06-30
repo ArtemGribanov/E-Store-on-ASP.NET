@@ -13,6 +13,7 @@ public static class DIConfiguration
 		{
 			options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 		})
+		.ConfigureDALRepositories()
 		.ConfigureBLLServices()
 		.ConfigureBLLValidators();
 

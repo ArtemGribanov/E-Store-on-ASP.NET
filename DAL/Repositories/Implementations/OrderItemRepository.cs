@@ -41,10 +41,11 @@ namespace DAL.Repositories.Implementations
             return ordersItems;
         }
 
-        public async Task<OrderItem> GetByIdAsync(int id)
+        public async Task<OrderItem> GetByIdAsync(int orderId, int productId)
         {
-            var orderItem = await _context.OrdersItem.AsNoTracking()
-                .FirstOrDefaultAsync(OrderItem => OrderItem.OrderId == id);
+            var orderItem = await _context.OrdersItem
+                .AsNoTracking()
+                .FirstOrDefaultAsync(ordItem => ordItem.OrderId == orderId && ordItem.ProductId == productId);
 
             return orderItem;
         }
