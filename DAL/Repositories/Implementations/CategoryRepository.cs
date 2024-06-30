@@ -16,16 +16,16 @@ namespace DAL.Repositories.Implementations
             _context = context;
         }
 
-        public async void CreateAsync(Category category)
+        public void CreateAsync(Category category)
         {
             _context.Category.Add(category);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public void DeleteAsync(Category category)
         {
             _context.Category.Remove(category);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
 		public async Task<IEnumerable<Category>> FindAsync(Expression<Func<Category, bool>> predicate)
@@ -53,7 +53,7 @@ namespace DAL.Repositories.Implementations
         public void UpdateAsync(Category category)
         {
             _context.Category.Update(category);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 }
