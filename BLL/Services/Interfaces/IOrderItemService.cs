@@ -9,5 +9,6 @@ public interface IOrderItemService
 	Task UpdateAsync(int orderId, int productId,  OrderItemRequestDTO orderItem);
 	Task DeleteAsync(int orderId, int productId);
 	Task<OrderItemResponseDTO> GetByIdAsync(int orderId, int productId);
+	Task<IEnumerable<OrderItemResponseDTO>> GetAllAsync();
 	Task<int> GetProductCountById(int orderId, int productId);
 }

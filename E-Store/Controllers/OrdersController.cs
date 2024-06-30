@@ -17,7 +17,6 @@ public class OrdersController : ControllerBase
 		_orderItemService = orderItemService;
 	}
 
-
 	[HttpPost]
 	[ProducesResponseType(StatusCodes.Status201Created)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -29,7 +28,6 @@ public class OrdersController : ControllerBase
 		return CreatedAtRoute("GetOrderById", new { id = newOrder.Id }, newOrder);
 	}
 
-
 	[HttpGet]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> GetAllAsync()
@@ -38,7 +36,6 @@ public class OrdersController : ControllerBase
 
 		return Ok(orders);
 	}
-
 
 	[HttpGet("{id}", Name = "GetOrderById")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
@@ -50,7 +47,6 @@ public class OrdersController : ControllerBase
 		return Ok(order);
 	}
 
-
 	[HttpPut]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -61,29 +57,12 @@ public class OrdersController : ControllerBase
 		return NoContent();
 	}
 
-
 	[HttpDelete("{id}")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
-	public async Task<IActionResult> Delete(int id)
+	public async Task<IActionResult> DeleteAsync(int id)
 	{
 		await _orderService.DeleteAsync(id);
-
-		return NoContent();
-	}
-
-	[HttpPost("{orderId}/items/{orderItemId}")]
-	[ProducesResponseType(StatusCodes.Status204NoContent)]
-	[ProducesResponseType(StatusCodes.Status404NotFound)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> AddItemToOrder(int orderId, int productId, int productCount = 1)
-	{
-		await _orderItemService.CreateAsync(new OrderItemRequestDTO 
-		{
-			OrderId = orderId, 
-			ProductId = productId, 
-			Count = productCount 
-		});
 
 		return NoContent();
 	}
