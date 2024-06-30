@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace DAL.Repositories.Implementations
 {
-    internal class CategoryRepository : ICategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly EShopContext _context;
 
@@ -16,7 +16,7 @@ namespace DAL.Repositories.Implementations
             _context = context;
         }
 
-        public void CreateAsync(Category category)
+        public async void CreateAsync(Category category)
         {
             _context.Category.Add(category);
             _context.SaveChangesAsync();
@@ -28,7 +28,7 @@ namespace DAL.Repositories.Implementations
             _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Category>> FindAsync(Expression<Func<Category, bool>> predicate)
+		public async Task<IEnumerable<Category>> FindAsync(Expression<Func<Category, bool>> predicate)
         {
             return await _context.Category.Where(predicate).AsNoTracking()
                 .ToListAsync();

@@ -1,6 +1,7 @@
 using DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using E_Store.Middlewares;
+using E_Store.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<EShopContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.ConfigureServices();
 
 var app = builder.Build();
 

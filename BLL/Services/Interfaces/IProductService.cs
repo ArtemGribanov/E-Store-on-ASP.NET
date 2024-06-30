@@ -9,4 +9,5 @@ public interface IProductService
 	Task UpdateAsync(int id, ProductRequestDTO product);
 	Task DeleteAsync(int id);
 	Task<ProductResponseDTO> GetByIdAsync(int id);
+	Task<IEnumerable<ProductResponseDTO>> GetAllAsync();
 }

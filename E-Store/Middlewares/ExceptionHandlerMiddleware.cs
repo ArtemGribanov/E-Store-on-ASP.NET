@@ -44,7 +44,7 @@ public class ExceptionHandlerMiddleware
 		if (statusCode == HttpStatusCode.InternalServerError)
 			_logger.LogError(ex, message);
 
-		await context.Response.WriteAsJsonAsync(exceptionResult);
+		await context.Response.WriteAsync(exceptionResult);
 	}
 
 	private static HttpStatusCode GetStatusCode(Exception exception) => exception switch

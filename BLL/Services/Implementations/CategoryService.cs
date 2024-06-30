@@ -1,8 +1,12 @@
 ﻿using BLL.DTO.Request;
 using BLL.DTO.Response;
+using BLL.Exceptions;
 using BLL.Services.Interfaces;
+using DAL.Entities;
 using DAL.Repositories.Interfaces;
 using FluentValidation;
+using Mapster;
+using System.Net.WebSockets;
 
 namespace BLL.Services.Implementations;
 
@@ -15,28 +19,75 @@ public class CategoryService : ICategoryService
         _categoryRepository = categoryRepository;
 		_validator = validator;
     }
-    public Task<CategoryResponseDTO> CreateAsync(CategoryRequestDTO category)
+    public async Task<CategoryResponseDTO> CreateAsync(CategoryRequestDTO category)
 	{
-		throw new NotImplementedException();
+		var validationResult = await _validator.ValidateAsync(category);
+
+		if (!validationResult.IsValid)
+		{
+			throw new Exceptions.ValidationException("Validation error");
+		}
+
+		var mappedCategory = category.Adapt<Category>();
+
+		_categoryRepository.CreateAsync(mappedCategory);
+
+		var response = mappedCategory.Adapt<CategoryResponseDTO>();
+		return response;
 	}
 
-	public Task DeleteAsync(int id)
+	public async Task DeleteAsync(int id)
 	{
-		throw new NotImplementedException();
+		var category = await _categoryRepository.GetByIdAsync(id);
+
+		if (category == null)
+		{
+			throw new NotFoundException($"Category with id {id} not found");
+		}
+
+		_categoryRepository.DeleteAsync(category);
 	}
 
-	public Task<IEnumerable<CategoryResponseDTO>> GetAllAsync()
+	public async Task<IEnumerable<CategoryResponseDTO>> GetAllAsync()
 	{
-		throw new NotImplementedException();
+		var categories = await _categoryRepository.GetAllAsync();
+
+		var mappedCategories = categories.Adapt<IEnumerable<CategoryResponseDTO>>();
+
+		return mappedCategories;
 	}
 
-	public Task<CategoryResponseDTO> GetByIdAsync(int id)
+	public async Task<CategoryResponseDTO> GetByIdAsync(int id)
 	{
-		throw new NotImplementedException();
+		var category = await _categoryRepository.GetByIdAsync(id);
+
+		if (category == null)
+		{
+			throw new NotFoundException($"Category with id {id} not found");
+		}
+
+		var mappedCategory = category.Adapt<CategoryResponseDTO>();
+		return mappedCategory;
 	}
 
-	public Task UpdateAsync(int id, CategoryRequestDTO category)
+	public async Task UpdateAsync(int id, CategoryRequestDTO category)
 	{
-		throw new NotImplementedException();
-	}
+		var validationResult = await _validator.ValidateAsync(category);
+
+        if (!validationResult.IsValid)
+        {
+			throw new Exceptions.ValidationException("Validation error");
+        }
+
+		var categoryExist = await _categoryRepository.GetByIdAsync(id);
+
+		if (categoryExist == null)
+		{
+			throw new NotFoundException($"Category with id {id} not found");
+		}
+
+		category.Adapt(categoryExist);
+
+		_categoryRepository.UpdateAsync(categoryExist);
+    }
 }

@@ -22,7 +22,7 @@ public class ProductService : IProductService
 	{
 		var validationResult = await _validator.ValidateAsync(product);
 
-		if (validationResult.IsValid)
+		if (!validationResult.IsValid)
 		{
 			throw new Exceptions.ValidationException("Validation error");
 		}
@@ -47,6 +47,15 @@ public class ProductService : IProductService
 		_productRepository.DeleteAsync(product);
 	}
 
+	public async Task<IEnumerable<ProductResponseDTO>> GetAllAsync()
+	{
+		var products = await _productRepository.GetAllAsync();
+
+		var mappedProducts = products.Adapt<IEnumerable<ProductResponseDTO>>();
+
+		return mappedProducts;
+	}
+
 	public async Task<ProductResponseDTO> GetByIdAsync(int id)
 	{
 		var product = await _productRepository.GetByIdAsync(id);
@@ -63,7 +72,7 @@ public class ProductService : IProductService
 	{
 		var validationResult = await _validator.ValidateAsync(product);
 
-		if (validationResult.IsValid)
+		if (!validationResult.IsValid)
 		{
 			throw new Exceptions.ValidationException("Validation error");
 		}
@@ -74,6 +83,8 @@ public class ProductService : IProductService
 		{
 			throw new NotFoundException($"Product with id {id} not found");
 		}
+
+		product.Adapt(productExist);
 
 		_productRepository.UpdateAsync(productExist);
 	}
