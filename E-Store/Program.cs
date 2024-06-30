@@ -16,6 +16,8 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 
 builder.ConfigureServices();
 
+builder.ConfigureServices();
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
